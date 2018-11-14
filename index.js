@@ -10,6 +10,10 @@ const execa = require('execa')
 const mb = menubar({ width: 1, height: 1 })
 const imagesPath = path.join(__dirname, 'images')
 
+const contextMenu = Menu.buildFromTemplate ([
+  { label: 'Quit App', click: () => { mb.app.quit() }}
+])
+
 mb.on('ready', function ready() {
   const defaults = execa.shellSync(
     'defaults read com.apple.finder CreateDesktop'
@@ -20,8 +24,7 @@ mb.on('ready', function ready() {
   setIcon(visible)
 
   mb.tray.on('right-click', () => {
-    mb.tray.setImage(`${imagesPath}/oh.png`)
-    setTimeout(_ => mb.app.quit(), 500)
+    mb.tray.popUpContextMenu (contextMenu);
   })
 
   mb.tray.on('click', () => {
